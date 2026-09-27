@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { GraduationCap, Mail, MapPin, Phone } from 'lucide-react'
 import { FOOTER_SERVICES, NAV_LINKS, SITE } from '../data/site'
 
@@ -71,7 +72,7 @@ export default function Footer() {
         <div className="grid gap-12 lg:grid-cols-[1.35fr_0.9fr_1fr_1.15fr] lg:gap-10">
           {/* Brand */}
           <div>
-            <a href="#home" className="flex items-center gap-3">
+            <Link to="/" className="flex items-center gap-3">
               <span className="relative grid h-12 w-12 place-items-center rounded-xl bg-white/10 ring-1 ring-white/15">
                 <GraduationCap className="h-6 w-6 text-orange-500" aria-hidden="true" />
               </span>
@@ -83,7 +84,7 @@ export default function Footer() {
                   EduTech Private Limited
                 </span>
               </span>
-            </a>
+            </Link>
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-navy-100/70">
               {SITE.name} — Empowering Skills. Transforming Futures. Practical
               learning, real skills, better careers.
@@ -110,13 +111,13 @@ export default function Footer() {
             <ul className="mt-5 space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.id}>
-                  <a
-                    href={`#${link.id}`}
+                  <Link
+                    to={link.path}
                     className="group inline-flex items-center gap-2 text-sm text-navy-100/70 transition-colors hover:text-orange-400"
                   >
                     <span className="h-1 w-1 rounded-full bg-orange-500/60 transition-all duration-200 group-hover:w-3" aria-hidden="true" />
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -130,13 +131,13 @@ export default function Footer() {
             <ul className="mt-5 space-y-3">
               {FOOTER_SERVICES.map((service) => (
                 <li key={service}>
-                  <a
-                    href="#training"
+                  <Link
+                    to="/services"
                     className="group inline-flex items-center gap-2 text-sm text-navy-100/70 transition-colors hover:text-orange-400"
                   >
                     <span className="h-1 w-1 rounded-full bg-orange-500/60 transition-all duration-200 group-hover:w-3" aria-hidden="true" />
                     {service}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
+import { Link, NavLink } from 'react-router-dom'
 import { GraduationCap, Menu, Phone, X } from 'lucide-react'
 import { NAV_LINKS, SITE } from '../data/site'
 import ThemeToggle from './ThemeToggle'
 
 function Wordmark() {
   return (
-    <a
-      href="#home"
+    <Link
+      to="/"
       className="flex shrink-0 items-center gap-3"
       aria-label="InfySkill EduTech Pvt. Ltd. – Home"
     >
@@ -22,30 +23,17 @@ function Wordmark() {
           EduTech Private Limited
         </span>
       </span>
-    </a>
+    </Link>
   )
 }
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
-  const [active, setActive] = useState('home')
 
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 8)
-      let current = 'home'
-      for (const link of NAV_LINKS) {
-        const el = document.getElementById(link.id)
-        if (el && el.getBoundingClientRect().top <= 140) current = link.id
-      }
-      if (
-        window.innerHeight + window.scrollY >=
-        document.documentElement.scrollHeight - 4
-      ) {
-        current = 'contact'
-      }
-      setActive(current)
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
@@ -77,21 +65,27 @@ export default function Navbar() {
         <ul className="hidden items-center gap-0.5 xl:flex">
           {NAV_LINKS.map((link) => (
             <li key={link.id}>
-              <a
-                href={`#${link.id}`}
-                className={`relative rounded-full px-3.5 py-2 text-[13.5px] font-semibold transition-colors duration-200 ${
-                  active === link.id
-                    ? 'text-orange-600 dark:text-orange-400'
-                    : 'text-navy-700 hover:text-orange-600 dark:text-navy-100 dark:hover:text-orange-400'
-                }`}
+              <NavLink
+                to={link.path}
+                className={({ isActive }) =>
+                  `relative rounded-full px-3.5 py-2 text-[13.5px] font-semibold transition-colors duration-200 ${
+                    isActive
+                      ? 'text-orange-600 dark:text-orange-400'
+                      : 'text-navy-700 hover:text-orange-600 dark:text-navy-100 dark:hover:text-orange-400'
+                  }`
+                }
               >
-                {link.label}
-                <span
-                  className={`absolute inset-x-3.5 -bottom-0.5 h-0.5 rounded-full bg-orange-500 transition-transform duration-300 ${
-                    active === link.id ? 'scale-x-100' : 'scale-x-0'
-                  }`}
-                />
-              </a>
+                {({ isActive }) => (
+                  <>
+                    {link.label}
+                    <span
+                      className={`absolute inset-x-3.5 -bottom-0.5 h-0.5 rounded-full bg-orange-500 transition-transform duration-300 ${
+                        isActive ? 'scale-x-100' : 'scale-x-0'
+                      }`}
+                    />
+                  </>
+                )}
+              </NavLink>
             </li>
           ))}
         </ul>
@@ -104,9 +98,9 @@ export default function Navbar() {
             <Phone className="h-4 w-4 text-orange-500" aria-hidden="true" />
             {SITE.phone}
           </a>
-          <a href="#contact" className="btn btn-primary hidden px-6! py-2.5! xl:inline-flex">
+          <Link to="/contact" className="btn btn-primary hidden px-6! py-2.5! xl:inline-flex">
             Get in Touch
-          </a>
+          </Link>
           <ThemeToggle />
           {/* Mobile toggle */}
           <button
@@ -144,33 +138,39 @@ export default function Navbar() {
           <ul className="divide-y divide-navy-50 dark:divide-white/5">
             {NAV_LINKS.map((link) => (
               <li key={link.id}>
-                <a
-                  href={`#${link.id}`}
+                <NavLink
+                  to={link.path}
                   onClick={() => setOpen(false)}
-                  className={`flex items-center justify-between rounded-xl px-4 py-3.5 text-[15px] font-semibold transition-colors ${
-                    active === link.id
-                      ? 'bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400'
-                      : 'text-navy-800 hover:bg-navy-50 dark:text-navy-100 dark:hover:bg-white/5'
-                  }`}
+                  className={({ isActive }) =>
+                    `flex items-center justify-between rounded-xl px-4 py-3.5 text-[15px] font-semibold transition-colors ${
+                      isActive
+                        ? 'bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400'
+                        : 'text-navy-800 hover:bg-navy-50 dark:text-navy-100 dark:hover:bg-white/5'
+                    }`
+                  }
                 >
-                  {link.label}
-                  <span
-                    className={`h-2 w-2 rounded-full ${
-                      active === link.id ? 'bg-orange-500' : 'bg-navy-100 dark:bg-white/10'
-                    }`}
-                  />
-                </a>
+                  {({ isActive }) => (
+                    <>
+                      {link.label}
+                      <span
+                        className={`h-2 w-2 rounded-full ${
+                          isActive ? 'bg-orange-500' : 'bg-navy-100 dark:bg-white/10'
+                        }`}
+                      />
+                    </>
+                  )}
+                </NavLink>
               </li>
             ))}
           </ul>
           <div className="mt-4 grid gap-2 border-t border-navy-100 pt-4 dark:border-white/10">
-            <a
-              href="#contact"
+            <Link
+              to="/contact"
               onClick={() => setOpen(false)}
               className="btn btn-primary w-full"
             >
               Get in Touch
-            </a>
+            </Link>
             <a href={SITE.phoneHref} className="btn btn-outline-navy w-full">
               <Phone className="h-4 w-4" aria-hidden="true" />
               {SITE.phone}

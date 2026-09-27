@@ -17,14 +17,13 @@ export const SITE = {
 }
 
 export const NAV_LINKS = [
-  { id: 'home', label: 'Home' },
-  { id: 'about', label: 'About Us' },
-  { id: 'training', label: 'Training Services' },
-  { id: 'internships', label: 'Internships' },
-  { id: 'projects', label: 'Projects' },
-  { id: 'platform', label: 'Practice Platform' },
-  { id: 'why', label: 'Why InfySkill' },
-  { id: 'contact', label: 'Contact' },
+  { id: 'home', label: 'Home', path: '/' },
+  { id: 'about', label: 'About Us', path: '/about' },
+  { id: 'training', label: 'Training Services', path: '/services' },
+  { id: 'internships', label: 'Internships', path: '/internships' },
+  { id: 'projects', label: 'Projects', path: '/projects' },
+  { id: 'platform', label: 'Practice Platform', path: '/platform' },
+  { id: 'contact', label: 'Contact', path: '/contact' },
 ]
 
 export const FOOTER_SERVICES = [

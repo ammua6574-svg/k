@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { ArrowRight, Phone } from 'lucide-react'
 import Reveal from './Reveal'
 
@@ -18,14 +19,14 @@ export default function CTA() {
             a successful career with InfySkill.
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <a href="#training" className="btn btn-primary px-8!">
+            <Link to="/services" className="btn btn-primary px-8!">
               Explore Training
               <ArrowRight className="h-4.5 w-4.5" aria-hidden="true" />
-            </a>
-            <a href="#contact" className="btn btn-outline-white px-8!">
+            </Link>
+            <Link to="/contact" className="btn btn-outline-white px-8!">
               <Phone className="h-4.5 w-4.5" aria-hidden="true" />
               Contact InfySkill
-            </a>
+            </Link>
           </div>
         </Reveal>
       </div>

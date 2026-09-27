@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { ArrowRight, Check, ChevronDown, Phone, Sparkles } from 'lucide-react'
 import HeroIllustration from './HeroIllustration'
 import Reveal from './Reveal'
@@ -76,14 +77,14 @@ export default function Hero() {
 
           <Reveal delay={320}>
             <div className="mt-10 flex flex-wrap items-center gap-4">
-              <a href="#training" className="btn btn-primary px-8! shadow-orange-500/40">
+              <Link to="/services" className="btn btn-primary px-8! shadow-orange-500/40">
                 Explore Our Services
                 <ArrowRight className="h-4.5 w-4.5" aria-hidden="true" />
-              </a>
-              <a href="#contact" className="btn btn-outline-white">
+              </Link>
+              <Link to="/contact" className="btn btn-outline-white">
                 <Phone className="h-4.5 w-4.5" aria-hidden="true" />
                 Contact Us
-              </a>
+              </Link>
             </div>
           </Reveal>
         </div>
@@ -152,14 +153,14 @@ export default function Hero() {
       </div>
 
       {/* Scroll cue */}
-      <a
-        href="#about"
+      <Link
+        to="/about"
         aria-label="Scroll to about section"
         className="absolute bottom-4 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-1 text-navy-300 transition-colors hover:text-orange-400 lg:flex"
       >
         <span className="text-[10px] font-bold uppercase tracking-[0.25em]">Discover</span>
         <ChevronDown className="h-5 w-5 animate-bounce" aria-hidden="true" />
-      </a>
+      </Link>
     </section>
   )
 }
