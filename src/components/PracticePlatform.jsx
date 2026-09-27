@@ -76,9 +76,11 @@ export default function PracticePlatform() {
         </Reveal>
 
         <Reveal delay={120}>
-          <p className="mx-auto -mt-6 mb-12 max-w-2xl text-center font-heading text-lg font-bold text-orange-400 sm:text-xl">
-            Learn. Practice. Analyze. Improve – Anytime, Anywhere.
-          </p>
+          <div className="mx-auto mb-14 max-w-xl text-center">
+            <span className="inline-flex items-center gap-2 rounded-full bg-orange-500/10 px-5 py-2 font-heading text-base font-extrabold tracking-wide text-orange-400 border border-orange-500/20 shadow-lg">
+              Learn. Practice. Analyze. Improve — Anytime, Anywhere.
+            </span>
+          </div>
         </Reveal>
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
