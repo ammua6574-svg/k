@@ -1,42 +1,40 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { useCallback, useState } from 'react'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
-import BackToTop from './components/BackToTop'
-import ScrollProgress from './components/ScrollProgress'
+import EnquiryModal from './components/EnquiryModal'
+import FloatingWidgets from './components/FloatingWidgets'
 import ScrollToTop from './components/ScrollToTop'
 
-// Pages
 import Home from './pages/Home'
 import AboutPage from './pages/AboutPage'
-import ServicesPage from './pages/ServicesPage'
-import InternshipsPage from './pages/InternshipsPage'
-import ProjectsPage from './pages/ProjectsPage'
-import PlatformPage from './pages/PlatformPage'
-import ContactPage from './pages/ContactPage'
 
-function App() {
+export default function App() {
+  const [isEnquiryOpen, setIsEnquiryOpen] = useState(false)
+
+  const openEnquiry = useCallback(() => setIsEnquiryOpen(true), [])
+  const closeEnquiry = useCallback(() => setIsEnquiryOpen(false), [])
+
   return (
     <BrowserRouter>
-      <div className="bg-white transition-colors duration-300 dark:bg-navy-950">
-        <ScrollProgress />
+      <div className="flex min-h-screen flex-col bg-white font-sans text-ink">
         <ScrollToTop />
-        <Navbar />
-        <main>
+        <Navbar onOpenEnquiry={openEnquiry} />
+
+        <main className="flex-grow">
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/services" element={<ServicesPage />} />
-            <Route path="/internships" element={<InternshipsPage />} />
-            <Route path="/projects" element={<ProjectsPage />} />
-            <Route path="/platform" element={<PlatformPage />} />
-            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/" element={<Home onOpenEnquiry={openEnquiry} />} />
+            <Route path="/about" element={<AboutPage onOpenEnquiry={openEnquiry} />} />
+            <Route path="*" element={<Home onOpenEnquiry={openEnquiry} />} />
           </Routes>
         </main>
-        <Footer />
-        <BackToTop />
+
+        <Footer onOpenEnquiry={openEnquiry} />
+
+        <FloatingWidgets />
+
+        <EnquiryModal isOpen={isEnquiryOpen} onClose={closeEnquiry} />
       </div>
     </BrowserRouter>
   )
 }
-
-export default App

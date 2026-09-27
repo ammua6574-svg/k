@@ -1,166 +1,293 @@
-import { useEffect, useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
-import { Menu, Phone, X } from 'lucide-react'
-import { NAV_LINKS, SITE } from '../data/site'
+import { useEffect, useRef, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { ArrowRight, Mail, MapPin, Menu, Phone, Search, X } from 'lucide-react'
+import { SITE } from '../data/site'
+import { InfySkillLogo } from './InfySkillLogo'
 
-function Wordmark() {
-  return (
-    <Link
-      to="/"
-      className="flex shrink-0 items-center gap-3"
-      aria-label="InfySkill EduTech Pvt. Ltd. – Home"
-    >
-      {/* Exact Logo Icon from infyskill.in */}
-      <span className="relative flex h-11 w-11 shrink-0 items-center justify-center">
-        <svg className="h-11 w-11 text-blue-600" viewBox="0 0 36 36" fill="currentColor">
-          <path d="M18 4L4 28h8l6-11 6 11h8L18 4z" opacity="0.9" />
-          <path d="M18 12l-4 7h8l-4-7z" fill="#ff6b00" />
-        </svg>
-      </span>
-      <span className="leading-tight">
-        <span className="block font-heading text-xl font-extrabold tracking-tight text-navy-950">
-          INFYSKILL
-        </span>
-        <span className="block text-[11px] font-semibold uppercase tracking-[0.2em] text-blue-600">
-          EduTech Pvt.Ltd
-        </span>
-      </span>
-    </Link>
-  )
-}
+/* Only the two pages that exist are real routes. Every other brand
+   entry point is captured as a searchable jump-list instead of a 404. */
+const SECTIONS = [
+  { label: 'Popular Courses', path: '/', hash: 'courses' },
+  { label: 'For Colleges & Institutions', path: '/', hash: 'colleges' },
+  { label: 'Our Services', path: '/', hash: 'services' },
+  { label: 'Student Testimonials', path: '/', hash: 'testimonials' },
+  { label: 'Partner Colleges', path: '/', hash: 'partners' },
+  { label: 'Latest from Our Blog', path: '/', hash: 'blog' },
+  { label: 'About InfySkill', path: '/about' },
+  { label: 'Our Story', path: '/about', hash: 'story' },
+  { label: 'Mission, Vision & Values', path: '/about', hash: 'mission' },
+  { label: 'Our Journey', path: '/about', hash: 'journey' },
+  { label: 'Why Choose InfySkill', path: '/about', hash: 'why-infyskill' },
+]
 
-export default function Navbar() {
+const LINKS = [
+  { label: 'Home', path: '/' },
+  { label: 'About Us', path: '/about' },
+]
+
+export default function Navbar({ onOpenEnquiry }) {
   const [scrolled, setScrolled] = useState(false)
-  const [open, setOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [query, setQuery] = useState('')
+  const inputRef = useRef(null)
+  const location = useLocation()
+  const navigate = useNavigate()
 
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 8)
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
+    const onScroll = () => setScrolled(window.scrollY > 12)
     onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   useEffect(() => {
+    const open = menuOpen || searchOpen
     document.body.style.overflow = open ? 'hidden' : ''
     return () => {
       document.body.style.overflow = ''
     }
-  }, [open])
+  }, [menuOpen, searchOpen])
+
+  useEffect(() => {
+    if (searchOpen) inputRef.current?.focus()
+  }, [searchOpen])
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key !== 'Escape') return
+      setMenuOpen(false)
+      setSearchOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
+  const results = query.trim()
+    ? SECTIONS.filter((s) =>
+        s.label.toLowerCase().includes(query.trim().toLowerCase()),
+      )
+    : SECTIONS.slice(0, 6)
+
+  const go = (item) => {
+    setSearchOpen(false)
+    setQuery('')
+    navigate(`${item.path}${item.hash ? `#${item.hash}` : ''}`)
+  }
+
+  const isActive = (path) =>
+    path === '/' ? location.pathname === '/' : location.pathname.startsWith(path)
 
   return (
-    <header
-      className={`sticky top-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'border-b border-navy-100 bg-white/95 shadow-md shadow-navy-900/5 backdrop-blur-xl'
-          : 'bg-white/90 backdrop-blur-md'
-      }`}
-    >
-      <nav
-        className="container-site flex h-[76px] items-center justify-between gap-6"
-        aria-label="Main navigation"
-      >
-        <Wordmark />
-
-        {/* Desktop links */}
-        <ul className="hidden items-center gap-1 xl:flex">
-          {NAV_LINKS.map((link) => (
-            <li key={link.id}>
-              <NavLink
-                to={link.path}
-                className={({ isActive }) =>
-                  `relative rounded-full px-3.5 py-2 text-[14px] font-semibold transition-colors duration-200 ${
-                    isActive
-                      ? 'text-orange-600 bg-orange-50'
-                      : 'text-navy-800 hover:text-orange-600 hover:bg-navy-50'
-                  }`
-                }
-              >
-                {link.label}
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-
-        <div className="flex items-center gap-3">
-          <a
-            href={SITE.phoneHref}
-            className="hidden items-center gap-2 text-sm font-semibold text-navy-800 transition-colors hover:text-orange-600 xl:flex"
-          >
-            <Phone className="h-4 w-4 text-orange-500" aria-hidden="true" />
-            {SITE.phone}
-          </a>
-          <Link to="/contact" className="btn btn-primary hidden px-6! py-2.5! xl:inline-flex">
-            Login
-          </Link>
-          {/* Mobile toggle */}
-          <button
-            type="button"
-            onClick={() => setOpen(!open)}
-            aria-expanded={open}
-            aria-controls="mobile-menu"
-            aria-label={open ? 'Close menu' : 'Open menu'}
-            className="grid h-11 w-11 place-items-center rounded-xl border border-navy-200 bg-white text-navy-900 shadow-sm transition hover:border-orange-300 hover:text-orange-600 xl:hidden"
-          >
-            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
-        </div>
-      </nav>
-
-      {/* Mobile menu */}
-      <div
-        id="mobile-menu"
-        className={`fixed inset-x-0 top-[76px] bottom-0 z-40 transition-all duration-300 xl:hidden ${
-          open ? 'visible opacity-100' : 'invisible opacity-0'
-        }`}
-      >
-        <button
-          type="button"
-          aria-label="Close menu overlay"
-          className="absolute inset-0 bg-navy-950/40 backdrop-blur-sm"
-          onClick={() => setOpen(false)}
-          tabIndex={open ? 0 : -1}
-        />
-        <div
-          className={`relative mx-4 mt-2 max-h-[calc(100vh-96px)] overflow-y-auto rounded-2xl border border-navy-100 bg-white p-4 shadow-2xl shadow-navy-900/20 transition-all duration-300 ${
-            open ? 'translate-y-0 opacity-100' : '-translate-y-3 opacity-0'
-          }`}
-        >
-          <ul className="divide-y divide-navy-50">
-            {NAV_LINKS.map((link) => (
-              <li key={link.id}>
-                <NavLink
-                  to={link.path}
-                  onClick={() => setOpen(false)}
-                  className={({ isActive }) =>
-                    `flex items-center justify-between rounded-xl px-4 py-3.5 text-[15px] font-semibold transition-colors ${
-                      isActive
-                        ? 'bg-orange-50 text-orange-600'
-                        : 'text-navy-800 hover:bg-navy-50'
-                    }`
-                  }
-                >
-                  {link.label}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-          <div className="mt-4 grid gap-2 border-t border-navy-100 pt-4">
-            <Link
-              to="/contact"
-              onClick={() => setOpen(false)}
-              className="btn btn-primary w-full"
+    <>
+      {/* Slim utility strip */}
+      <div className="hidden bg-navy-900 text-white lg:block">
+        <div className="container-site flex h-9 items-center justify-between text-[12.5px] text-navy-200">
+          <p className="flex items-center gap-2">
+            <MapPin className="h-3.5 w-3.5 text-accent-500" aria-hidden="true" />
+            {SITE.location}
+          </p>
+          <div className="flex items-center gap-6">
+            <a
+              href={SITE.phoneHref}
+              className="flex items-center gap-2 transition-colors hover:text-accent-300"
             >
-              Login
-            </Link>
-            <a href={SITE.phoneHref} className="btn btn-outline-navy w-full">
-              <Phone className="h-4 w-4" aria-hidden="true" />
+              <Phone className="h-3.5 w-3.5 text-accent-500" aria-hidden="true" />
               {SITE.phone}
+            </a>
+            <span className="h-3 w-px bg-white/20" aria-hidden="true" />
+            <a
+              href={SITE.emailPrimaryHref}
+              className="flex items-center gap-2 transition-colors hover:text-accent-300"
+            >
+              <Mail className="h-3.5 w-3.5 text-accent-500" aria-hidden="true" />
+              {SITE.emailPrimary}
             </a>
           </div>
         </div>
       </div>
-    </header>
+
+      <header
+        className={`sticky top-0 z-40 border-b bg-white/95 backdrop-blur-md transition-shadow duration-300 ${
+          scrolled
+            ? 'border-navy-100 shadow-[0_6px_24px_-14px_rgba(11,31,58,0.35)]'
+            : 'border-transparent'
+        }`}
+      >
+        <div className="container-site flex h-[70px] items-center justify-between gap-4 lg:h-[76px]">
+          <Link to="/" className="shrink-0" aria-label="InfySkill EduTech — home">
+            <InfySkillLogo />
+          </Link>
+
+          {/* Desktop menu */}
+          <nav aria-label="Primary" className="hidden lg:block">
+            <ul className="flex items-center gap-1">
+              {LINKS.map((link) => (
+                <li key={link.path}>
+                  <Link
+                    to={link.path}
+                    aria-current={isActive(link.path) ? 'page' : undefined}
+                    className={`relative rounded-lg px-3.5 py-2 text-[13.5px] font-semibold transition-colors ${
+                      isActive(link.path)
+                        ? 'text-brand-700'
+                        : 'text-navy-700 hover:text-brand-600'
+                    }`}
+                  >
+                    {link.label}
+                    {isActive(link.path) && (
+                      <span
+                        className="absolute inset-x-3 -bottom-px h-[3px] rounded-full bg-accent-500"
+                        aria-hidden="true"
+                      />
+                    )}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="flex items-center gap-2 sm:gap-3">
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              aria-label="Search InfySkill"
+              className="flex h-11 w-11 items-center justify-center rounded-xl border border-navy-100 text-navy-700 transition-colors hover:border-brand-200 hover:text-brand-600"
+            >
+              <Search className="h-5 w-5" aria-hidden="true" />
+            </button>
+
+            <button
+              type="button"
+              onClick={onOpenEnquiry}
+              className="btn btn-primary hidden !min-h-11 !px-5 sm:inline-flex"
+            >
+              Enquire Now
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-menu"
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              className="flex h-11 w-11 items-center justify-center rounded-xl bg-navy-900 text-white lg:hidden"
+            >
+              {menuOpen ? (
+                <X className="h-5 w-5" aria-hidden="true" />
+              ) : (
+                <Menu className="h-5 w-5" aria-hidden="true" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile drawer */}
+        {menuOpen && (
+          <div
+            id="mobile-menu"
+            className="animate-fade-up border-t border-navy-100 bg-white lg:hidden"
+          >
+            <nav aria-label="Mobile" className="container-site py-5">
+              <ul className="grid gap-1">
+                {LINKS.map((link) => (
+                  <li key={link.path}>
+                    <Link
+                      to={link.path}
+                      onClick={() => setMenuOpen(false)}
+                      className={`block rounded-xl px-4 py-3.5 text-base font-semibold transition-colors ${
+                        isActive(link.path)
+                          ? 'bg-brand-50 text-brand-700'
+                          : 'text-navy-800 hover:bg-mist'
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-5 grid gap-3 border-t border-navy-100 pt-5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false)
+                    onOpenEnquiry()
+                  }}
+                  className="btn btn-primary w-full"
+                >
+                  Enquire Now <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </button>
+                <a
+                  href={SITE.phoneHref}
+                  className="btn btn-outline w-full"
+                >
+                  <Phone className="h-4 w-4" aria-hidden="true" /> {SITE.phone}
+                </a>
+              </div>
+            </nav>
+          </div>
+        )}
+      </header>
+
+      {/* Search overlay */}
+      {searchOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-start justify-center bg-navy-950/70 px-4 pt-[12vh] backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Search InfySkill"
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) setSearchOpen(false)
+          }}
+        >
+          <div className="w-full max-w-xl animate-fade-up overflow-hidden rounded-2xl bg-white shadow-lift">
+            <div className="flex items-center gap-3 border-b border-navy-100 px-5">
+              <Search className="h-5 w-5 shrink-0 text-navy-300" aria-hidden="true" />
+              <input
+                ref={inputRef}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && results[0]) go(results[0])
+                }}
+                type="search"
+                placeholder="Search courses, placements, workshops…"
+                aria-label="Search"
+                className="h-14 w-full bg-transparent text-[15px] text-ink placeholder:text-navy-300 focus:outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => setSearchOpen(false)}
+                aria-label="Close search"
+                className="shrink-0 rounded-lg p-2 text-navy-400 transition-colors hover:bg-mist hover:text-navy-900"
+              >
+                <X className="h-5 w-5" aria-hidden="true" />
+              </button>
+            </div>
+
+            <ul className="max-h-[46vh] overflow-y-auto p-2">
+              {results.length === 0 && (
+                <li className="px-4 py-8 text-center text-sm text-muted">
+                  Nothing matched “{query}”. Try “courses” or “placements”.
+                </li>
+              )}
+              {results.map((item) => (
+                <li key={`${item.path}-${item.label}`}>
+                  <button
+                    type="button"
+                    onClick={() => go(item)}
+                    className="flex w-full items-center justify-between gap-4 rounded-xl px-4 py-3 text-left text-sm font-semibold text-navy-800 transition-colors hover:bg-brand-50 hover:text-brand-700"
+                  >
+                    {item.label}
+                    <ArrowRight className="h-4 w-4 shrink-0 text-navy-300" aria-hidden="true" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
