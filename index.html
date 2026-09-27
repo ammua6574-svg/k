@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0d1e42" />
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem('infyskill-theme')
+          if (t !== 'light' && t !== 'dark') {
+            t = window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light'
+          }
+          if (t === 'dark') document.documentElement.classList.add('dark')
+          document.documentElement.style.colorScheme = t
+        } catch (e) {}
+      })()
+    </script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>InfySkill EduTech Pvt. Ltd. | Empowering Skills. Transforming Futures.</title>
+    <meta
+      name="description"
+      content="InfySkill EduTech Pvt. Ltd., Visakhapatnam - Industry-relevant training, internships, project guidance and career development for Graduates & Post Graduates. Practical learning. Real skills. Better careers."
+    />
+    <meta name="keywords" content="InfySkill, InfySkill.in, EdTech, Training, Internships, Campus Recruitment Training, Aptitude, Soft Skills, Python, Full Stack, AI, Machine Learning, Visakhapatnam" />
+    <meta name="author" content="InfySkill EduTech Pvt. Ltd." />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="InfySkill EduTech Pvt. Ltd. | Empowering Skills. Transforming Futures." />
+    <meta
+      property="og:description"
+      content="Practical Learning. Real Skills. Better Careers. Industry-relevant training programs for graduates, post graduates and professionals."
+    />
+    <meta property="og:url" content="https://InfySkill.in/" />
+    <meta property="og:site_name" content="InfySkill EduTech Pvt. Ltd." />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="InfySkill EduTech Pvt. Ltd." />
+    <meta name="twitter:description" content="Practical Learning. Real Skills. Better Careers." />
+    <link rel="canonical" href="https://InfySkill.in/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
